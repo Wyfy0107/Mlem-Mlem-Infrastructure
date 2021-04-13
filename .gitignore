@@ -3,3 +3,6 @@ terraform.auto.tfvars
 terraform.tfstate.backup
 terraform.tfstate
 terraform.tfvars 
+server-provision/.env
+ec2.key
+ec2.key.pub

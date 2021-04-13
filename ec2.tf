@@ -19,7 +19,7 @@ resource "aws_instance" "mlem-mlem" {
   ami                  = data.aws_ami.ubuntu.id
   instance_type        = "t3.micro"
   iam_instance_profile = aws_iam_instance_profile.mlem-mlem.name
-  subnet_id            = aws_subnet.public[count.index]
+  subnet_id            = aws_subnet.public[0]
 
   vpc_security_group_ids = [aws_security_group.ec2.id]
 
@@ -38,4 +38,34 @@ resource "aws_eip" "ec2" {
   vpc      = true
 }
 
+resource "null_resource" "provision" {
+  triggers = {
+    env       = sha1(file("server-provision/.env"))
+    bootstrap = sha1(file("server-provision/bootstrap.sh"))
+    nginx     = sha1(file("server-provision/nginx.conf"))
+  }
+
+  # Bootstrap script can run on any instance of the cluster
+  # So we just choose the first in this case
+  connection {
+    host        = aws_instance.mlem-mlem.public_ip
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("${path.module}/ec2.key")
+  }
+
+  provisioner "file" {
+    source      = "server-provision/nginx.conf"
+    destination = "/tmp/nginx.conf"
+  }
+
+  provisioner "file" {
+    source      = "server-provision/.env"
+    destination = "/tmp/.env"
+  }
+
+  provisioner "remote-exec" {
+    script = "server-provision/bootstrap.sh"
+  }
+}
 
