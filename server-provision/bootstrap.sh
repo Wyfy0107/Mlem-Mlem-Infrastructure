@@ -24,3 +24,18 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot certonly \
   --dns-route53 \
   -d dev.mlem-mlem.net
+
+cat <(crontab -l) <(echo "00 3 * * 1 /usr/bin/certbot renew --dns-route53 --dns-route53-propagation-seconds 30") | crontab -
+
+# Install and Configure nginx
+sudo apt update
+sudo apt install nginx
+
+[[ ! -d $HOME/app ]] && mkdir $HOME/app
+[[ -f /tmp/.env ]] && mv /tmp/.env $HOME/app
+[[ -f /tmp/nginx.conf ]] && sudo cp /tmp/nginx.conf /etc/nginx/sites-available/server
+[[ -f /etc/nginx/sites-enabled/default ]] && sudo rm /etc/nginx/sites-enabled/default
+[[ -f /etc/nginx/sites-enabled/server ]] && sudo rm /etc/nginx/sites-enabled/server
+
+sudo ln -f /etc/nginx/sites-available/server /etc/nginx/sites-enabled
+sudo systemctl restart nginx
