@@ -48,7 +48,7 @@ resource "null_resource" "provision" {
   # Bootstrap script can run on any instance of the cluster
   # So we just choose the first in this case
   connection {
-    host        = aws_instance.mlem-mlem.public_ip
+    host        = aws_eip.ec2.public_ip
     type        = "ssh"
     user        = "ubuntu"
     private_key = file("${path.module}/ec2.key")

@@ -37,7 +37,7 @@ resource "aws_security_group" "rds" {
 
   ingress = [
     {
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = ["${aws_eip.ec2.public_ip}/32"]
       from_port   = var.rds_port
       to_port     = var.rds_port
       protocol    = "tcp"
