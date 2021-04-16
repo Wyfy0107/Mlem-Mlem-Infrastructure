@@ -28,21 +28,26 @@ resource "aws_iam_role_policy" "mlem-mlem" {
     Statement = [
       {
         Action = [
-          "s3:*",
+          "s3:CreateBucket",
+          "s3:PutBucketWebsite",
+          "s3:PutObject",
+          "s3:PutBucketPolicy",
         ]
+        Effect   = "Allow"
+        Resource = "arn:aws:s3:::*.mlem-mlem.net"
+      },
+      {
+        Action = [
+          "cloudfront:CreateDistribution",
+          "cloudfront:CreateInvalidation",
+          "cloudfront:CreateCloudFrontOriginAccessIdentity",
+        ],
         Effect   = "Allow"
         Resource = "*"
       },
       {
         Action = [
-          "cloudfront:*",
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-      {
-        Action = [
-          "route53:*",
+          "route53:ChangeResourceRecordSets",
         ]
         Effect   = "Allow"
         Resource = "*"
