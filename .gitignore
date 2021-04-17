@@ -6,3 +6,4 @@ terraform.tfvars
 server-provision/.env
 ec2.key
 ec2.key.pub
+crash.log

@@ -20,7 +20,7 @@ resource "aws_iam_role" "mlem-mlem" {
 }
 
 resource "aws_iam_role_policy" "mlem-mlem" {
-  name = "mlem-mlem policy"
+  name = "mlem-mlem-policy"
   role = aws_iam_role.mlem-mlem.id
 
   policy = jsonencode({
@@ -48,6 +48,8 @@ resource "aws_iam_role_policy" "mlem-mlem" {
       {
         Action = [
           "route53:ChangeResourceRecordSets",
+          "route53:ListHostedZones",
+          "route53:GetChange",
         ]
         Effect   = "Allow"
         Resource = "*"

@@ -14,7 +14,8 @@ resource "aws_instance" "mlem-mlem" {
   ami                  = data.aws_ami.ubuntu.id
   instance_type        = "t3.micro"
   iam_instance_profile = aws_iam_instance_profile.mlem-mlem.name
-  subnet_id            = aws_subnet.public[0]
+  subnet_id            = aws_subnet.public[0].id
+  key_name             = aws_key_pair.mlem-mlem.key_name
 
   vpc_security_group_ids = [aws_security_group.ec2.id]
 
@@ -29,8 +30,16 @@ resource "aws_iam_instance_profile" "mlem-mlem" {
 }
 
 resource "aws_eip" "ec2" {
-  instance = aws_instance.mlem-mlem.id
+  instance = aws_instance.mlem-mlem[0].id
   vpc      = true
+}
+
+data "template_file" "bootstrap" {
+  template = file("${path.module}/server-provision/bootstrap.sh")
+  vars = {
+    certbot_email  = var.certbot_email
+    certbot_domain = var.certbot_domain
+  }
 }
 
 resource "null_resource" "provision" {
@@ -59,8 +68,20 @@ resource "null_resource" "provision" {
     destination = "/tmp/.env"
   }
 
+  provisioner "file" {
+    content     = data.template_file.bootstrap.rendered
+    destination = "/tmp/bootstrap.sh"
+  }
+
   provisioner "remote-exec" {
-    script = "server-provision/bootstrap.sh"
+    inline = [
+      "chmod +x /tmp/bootstrap.sh",
+      "/tmp/bootstrap.sh"
+    ]
   }
 }
 
+resource "aws_key_pair" "mlem-mlem" {
+  key_name   = "ssh key"
+  public_key = file("${path.module}/ec2.key.pub")
+}

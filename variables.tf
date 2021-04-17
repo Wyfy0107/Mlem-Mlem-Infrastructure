@@ -31,6 +31,10 @@ variable "rds_username" {}
 variable "rds_engine" {}
 
 variable "rds_instance_class" {}
+
+variable "rds_db_name" {
+  description = "database name of rds"
+}
 variable "vpc_cidr" {
   description = "cidr block of the vpc"
 }
@@ -52,3 +56,11 @@ variable "route53_hosted_zone_id" {
   description = "hosted zone id of route53"
 }
 
+
+variable "certbot_domain" {
+  description = "domain to be authenticated with certbot"
+}
+
+variable "certbot_email" {
+  description = "email to be used with certbot"
+}
