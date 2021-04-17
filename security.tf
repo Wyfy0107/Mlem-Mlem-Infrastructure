@@ -24,6 +24,13 @@ resource "aws_security_group" "ec2" {
     protocol    = "tcp"
   }
 
+  ingress {
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+  }
+
 
   egress {
     cidr_blocks = ["0.0.0.0/0"]
@@ -39,7 +46,7 @@ resource "aws_security_group" "rds" {
   vpc_id      = aws_vpc.mlem-mlem.id
 
   ingress {
-    cidr_blocks = ["${aws_eip.ec2.public_ip}/32"]
+    cidr_blocks = ["0.0.0.0/0"]
     from_port   = var.rds_port
     to_port     = var.rds_port
     protocol    = "tcp"

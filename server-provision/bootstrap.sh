@@ -15,12 +15,15 @@ sudo apt install yarn
 sudo apt install --no-install-recommends yarn
 
 # Install pm2
-yarn add -g pm2
+sudo yarn global add pm2
+eval "$(pm2 startup | grep sudo)"
 
 # Install codedeploy agent
-curl -O https://aws-codedeploy-eu-west-1.s3.amazonaws.com/latest/install
+sudo apt --assume-yes install ruby wget
+wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
 chmod +x ./install
 sudo ./install auto > /tmp/logfile
+sudo service codedeploy-agent start
 
 # Install certbot
 sudo snap install core

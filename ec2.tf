@@ -34,6 +34,16 @@ resource "aws_eip" "ec2" {
   vpc      = true
 }
 
+data "template_file" "env" {
+  template = file("${path.module}/server-provision/.env")
+  vars = {
+    db_host     = aws_db_instance.mlem-mlem.address
+    db_password = var.rds_password
+    db_username = var.rds_username
+    db_name     = var.rds_db_name
+  }
+}
+
 data "template_file" "bootstrap" {
   template = file("${path.module}/server-provision/bootstrap.sh")
   vars = {
@@ -64,7 +74,7 @@ resource "null_resource" "provision" {
   }
 
   provisioner "file" {
-    source      = "server-provision/.env"
+    content     = data.template_file.env.rendered
     destination = "/tmp/.env"
   }
 

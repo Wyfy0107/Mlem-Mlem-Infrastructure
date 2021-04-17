@@ -20,12 +20,12 @@ resource "aws_iam_role" "codedeploy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "demo" {
+resource "aws_iam_role_policy_attachment" "mlem-mlem" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
   role       = aws_iam_role.codedeploy.name
 }
 
-resource "aws_codedeploy_deployment_group" "demo" {
+resource "aws_codedeploy_deployment_group" "mlem-mlem" {
   app_name              = aws_codedeploy_app.mlem-mlem.name
   deployment_group_name = "mlem-mlem-group"
   service_role_arn      = aws_iam_role.codedeploy.arn
