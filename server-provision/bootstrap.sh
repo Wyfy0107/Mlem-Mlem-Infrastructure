@@ -18,6 +18,12 @@ sudo apt install --no-install-recommends yarn
 sudo yarn global add pm2
 eval "$(pm2 startup | grep sudo)"
 
+# Logging Config
+sudo pm2 install pm2-logrotate
+sudo pm2 set pm2-logrotate:max_size 10M
+sudo pm2 set pm2-logrotate:retain 5
+sudo pm2 set pm2-logrotate:dateFormat "DD-MM-YYYY_HH-mm"
+
 # Install codedeploy agent
 sudo apt --assume-yes install ruby wget
 wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
