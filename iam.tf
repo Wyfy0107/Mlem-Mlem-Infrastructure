@@ -42,6 +42,7 @@ resource "aws_iam_role_policy" "mlem-mlem" {
           "cloudfront:CreateDistribution",
           "cloudfront:CreateInvalidation",
           "cloudfront:CreateCloudFrontOriginAccessIdentity",
+          "cloudfront:GetDistribution",
         ],
         Effect   = "Allow"
         Resource = "*"
